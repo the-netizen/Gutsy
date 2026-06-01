@@ -22,11 +22,11 @@ struct GutsyApp: App {
 //            fatalError("Could not create ModelContainer: \(error)")
 //        }
 //    }()
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-            Main()
+            SplashScreenView()
         }
 //        .modelContainer(sharedModelContainer)
     }

@@ -3,50 +3,70 @@ internal import Combine
 
 @MainActor
 class WeeklyStatsVM: ObservableObject {
+    
+    @Published var allMealLogs: [MealLog] = [] //full meal history
 
-    // All meal logs for the current week
-    @Published var weeklyLogs: [MealLog] = []
+    private var weeklyLogs: [MealLog] { //weekly meal history
+        let calendar = Calendar.current
 
-    // Unique plant names logged this week — the 12 in "12/30"
+        // Get the start of the current week (Monday 00:00)
+        guard let weekStart = calendar.dateInterval(
+            of: .weekOfYear, for: Date()
+        )?.start else { return [] }
+
+        return allMealLogs.filter {
+            $0.date >= weekStart && $0.date <= Date() //filters to only current week
+        }
+    }
+
+    // MARK: - Plants Per Week (the 12/30 card)
+
+    // Collects every plant from every meal this week and deduplicates by name
     var uniquePlantsThisWeek: Set<String> {
         let allPlants = weeklyLogs.flatMap { $0.confirmedPlants }
         return Set(allPlants.map { $0.name.lowercased() })
     }
 
-    // The number shown on the card
-    var plantCount: Int {
+    // The number displayed on the Plants per Week card e.g. "12"
+    var plantsPerWeekCount: Int {
         uniquePlantsThisWeek.count
     }
 
+    // MARK: - Overall Diversity (the ring card)
 
-    // How many unique plants per group this week across all meals
+    // Counts unique plants per Super Six group this week
     var countPerGroup: [String: Int] {
         var result: [String: Int] = [:]
         let allPlants = weeklyLogs.flatMap { $0.confirmedPlants }
 
-        // Count unique plant names per group
         for group in SuperSixGroups.allCases {
-            let plantsInGroup = allPlants
-                .filter { $0.group == group.rawValue }
-                .map { $0.name.lowercased() }
-            result[group.rawValue] = Set(plantsInGroup).count
+            // Filter plants belonging to this group then deduplicate
+            let uniqueInGroup = Set(
+                allPlants
+                    .filter { $0.group == group.rawValue }
+                    .map { $0.name.lowercased() }
+            )
+            result[group.rawValue] = uniqueInGroup.count
         }
         return result
     }
 
-    // How many of the 6 groups have at least 1 plant logged
-    var groupsCovered: Int {
+    // How many of the 6 groups the user has eaten from this week
+    var plantGroupsEaten: Int {
         countPerGroup.values.filter { $0 > 0 }.count
     }
 
-    // The 70% number shown on the ring
+    // The percentage shown on the Overall Diversity ring e.g. 70.0
+    // Combines two scores:
+    // - Quantity score: how close to 30 plants (out of 30)
+    // - Balance score: how many of the 6 groups are covered (out of 6)
+    // Both weighted equally at 50% each
     var diversityPercentage: Double {
-        let quantityScore = min(Double(plantCount), 30.0) / 30.0
-        let balanceScore = Double(groupsCovered) / Double(SuperSixGroups.allCases.count)
+        let quantityScore = min(Double(plantsPerWeekCount), 30.0) / 30.0
+        let balanceScore = Double(plantGroupsEaten) / Double(SuperSixGroups.allCases.count)
         return ((quantityScore + balanceScore) / 2.0) * 100
     }
 
-    // --make it like UI
     var diversityLabel: String {
         switch diversityPercentage {
         case 0..<25:  return "Just Starting"
@@ -57,19 +77,8 @@ class WeeklyStatsVM: ObservableObject {
         }
     }
 
-    // Filters logs to current week only (Monday → Sunday)
-    private var currentWeekLogs: [MealLog] {
-        let calendar = Calendar.current
-        let now = Date()
-
-        guard let weekStart = calendar.dateInterval(of: .weekOfYear, for: now)?.start else {
-            return []
-        }
-
-        return weeklyLogs.filter { $0.date >= weekStart && $0.date <= now }
-    }
-
-    // Count for a specific group — used by the bar charts and group cards
+    // Returns the unique plant count for one specific group
+    // Used by individual group stat bars in Microbiome Overview
     func count(for group: SuperSixGroups) -> Int {
         countPerGroup[group.rawValue] ?? 0
     }

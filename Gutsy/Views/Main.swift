@@ -8,7 +8,7 @@ struct Main: View {
             // title + subscription + settings (in toolbar)
             HStack{
                 // plants per week card
-                Text("\(viewModel.plantCount)/30")
+                Text("\(viewModel.plantsPerWeekCount)/30")
                 Spacer()
                 
                 // overall diversity card
