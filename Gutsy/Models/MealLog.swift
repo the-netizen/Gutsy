@@ -22,8 +22,13 @@ struct MealLog: Identifiable{
            self.mealInsight = mealInsight
        }
     
+    enum MealCardStyle {
+        case compact // square image + short date below
+        case gallery // image + time overlaid + optional tag on top left
+    }
+    
     //total plants per meal
-    var plantCount: Int {
+    var totalPlantsInMeal: Int {
         confirmedPlants.count
     }
     //count plants from each group in this meal. for bar chart
@@ -34,14 +39,35 @@ struct MealLog: Identifiable{
         }
         return result
     }
- 
-    // time + date
+    
+    // Full date for detail sheet header e.g. "3:00pm, 11/12/2026"
     var formattedDate: String {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "h:mma, dd/MM/yyyy"
-            return formatter.string(from: date).lowercased()
-        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mma, dd/MM/yyyy"
+        return formatter.string(from: date).lowercased()
+    }
 
-    
-    
+    // Time only — "3:00 pm"
+    var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: date).lowercased()
+    }
+
+    // Short date — "Wed, 3:00 pm"
+    var shortFormattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE, h:mm a"
+        return formatter.string(from: date).lowercased()
+    }
+
+    // "Today", "Yesterday", "Saturday"
+    var dayLabel: String {
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) { return "Today" }
+        if calendar.isDateInYesterday(date) { return "Yesterday" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        return formatter.string(from: date)
+    }
 }
