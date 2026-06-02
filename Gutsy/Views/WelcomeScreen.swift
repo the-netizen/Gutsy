@@ -40,7 +40,7 @@ struct SplashScreenView: View {
                 VStack {
                     Text("Welcome to")
                         .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.black)
 
                     Image("gutsy_logo")
                         .resizable()
@@ -49,7 +49,7 @@ struct SplashScreenView: View {
 
                     Text("Healthier Gut, One Plant at a Time.")
                         .font(.system(.body, design: .rounded))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.gray)
                         .padding(.top, 50)
                 }
 //                .padding(.top, 80)

@@ -18,6 +18,7 @@ struct OnboardingPageView: View {
             
             // Title
             Text(page.title)
+                .foregroundColor(.black) //change hardcoding later
                 .font(.title)
                 .bold()
                 .padding(.horizontal, 30)
@@ -38,7 +39,7 @@ struct OnboardingPageView: View {
             // Description
             Text(page.description)
                 .font(.title3)
-                .foregroundColor(.secondary)
+                .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
             
@@ -51,11 +52,13 @@ struct OnboardingPageView: View {
             Spacer()
             
             Text(page.title)
+                .foregroundColor(.black) //change hardcoding later
                 .font(.title)
                 .bold()
                 .padding(.horizontal, 30)
             
             Text(page.description)
+                .foregroundColor(.gray)
                 .font(.title3)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
