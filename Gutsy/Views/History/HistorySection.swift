@@ -2,8 +2,7 @@ import SwiftUI
 
 struct HistorySection: View {
     let meals: [MealLog]
-    let onMoreTapped: () -> Void
-    let onMealTapped: (MealLog) -> Void
+    @State private var selectedMeal: MealLog? = nil
 
     private let contentHeight: CGFloat = 160 //to keep it stable
 
@@ -15,18 +14,22 @@ struct HistorySection: View {
         }
         .padding(16)
         .background(
-            // Rounded background without clipping inner shadows
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color(.systemBackground))
+            
         )
+        .sheet(item: $selectedMeal) { meal in
+            MealInsights(meal: meal)
+        }
     }
 
     private var header: some View {
         HStack {
             Text("History")
-                .font(.system(size: 17, weight: .semibold))
+                .font(.body)
+                .bold()
             Spacer()
-            Button(action: onMoreTapped) {
+            NavigationLink(destination: HistoryPage()) {
                 Text("More >")
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
@@ -49,11 +52,11 @@ struct HistorySection: View {
             HStack(spacing: 15) {
                 ForEach(meals.prefix(10)) { meal in
                     MealCard(meal: meal, style: .compact) {
-                        onMealTapped(meal)
+                        selectedMeal = meal
                     }
                 }
             }
-//            .padding(.vertical, 3) // below cards
+            .padding(.vertical, 6) // below cards
         }//scroll
     }
 
@@ -77,9 +80,7 @@ struct HistorySection: View {
         )
     }
     HistorySection(
-        meals: mocks,
-        onMoreTapped: {},
-        onMealTapped: { _ in }
+        meals: mocks
     )
     .padding()
     .background(Color(.systemGray6))
@@ -87,9 +88,7 @@ struct HistorySection: View {
 
 #Preview("Empty") {
     HistorySection(
-        meals: [],
-        onMoreTapped: {},
-        onMealTapped: { _ in }
+        meals: []
     )
     .padding()
     .background(Color(.systemGray6))

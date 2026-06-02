@@ -58,7 +58,7 @@ struct MealLog: Identifiable{
     var shortFormattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE, h:mm a"
-        return formatter.string(from: date).lowercased()
+        return formatter.string(from: date)
     }
 
     // "Today", "Yesterday", "Saturday"

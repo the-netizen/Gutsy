@@ -19,7 +19,8 @@ struct OverallDiversityCard: View {
     private var frontContent: some View {
         VStack {
             Text("Overall Diversity")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.body)
+                .bold()
                 .padding(.top, 16)
 
             Spacer()
@@ -38,11 +39,12 @@ struct OverallDiversityCard: View {
     private var backContent: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Overall Diversity")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.body)
+                .bold()
                 .padding(.top, 16)
 
             Text("Your overall gut diversity! This tracks the variety in your gut microbiome, building up continuously from your very first meal to your last.")
-                .font(.system(size: 13))
+                .font(.caption)
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 

@@ -21,8 +21,8 @@ struct MealCard: View {
                 .padding(6)
 
             Text(meal.shortFormattedDate)
-                .font(.system(size: 12))
-                .foregroundColor(.primary)
+                .font(.callout)
+                .foregroundColor(.primary.opacity(0.7))
                 .lineLimit(1)
                 .padding(.horizontal, 10)
                 .padding(.bottom, 10)
