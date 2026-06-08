@@ -31,7 +31,7 @@ struct OverallDiversityCard: View {
 
             Spacer()
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 16)
     }
 
     // MARK: - Back

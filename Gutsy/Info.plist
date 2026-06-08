@@ -7,7 +7,7 @@
 		<key>UIColorName</key>
 		<string>bg</string>
 		<key>UIImageName</key>
-		<string>gutsy_logo</string>
+		<string>launchScreen</string>
 		<key>UIImageRespectsSafeAreaInsets</key>
 		<true/>
 	</dict>

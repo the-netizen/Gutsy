@@ -7,7 +7,7 @@ class PlantDB {
     private init() { load() }
 
     private func load() {
-        guard let url = Bundle.main.url(forResource: "plants", withExtension: "json"),
+        guard let url = Bundle.main.url(forResource: "Plants", withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let entries = try? JSONDecoder().decode([Plants].self, from: data) else {
             print("❌ Could not load plants.json")
@@ -30,5 +30,15 @@ class PlantDB {
     func allPlantNames() -> String {
         return plants.keys.sorted().joined(separator: ", ")
     }
-    
+    // for drop down
+    func suggestions(matching query: String, limit: Int = 6) -> [String] {
+        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !q.isEmpty else { return [] }
+
+        let allNames = plants.keys.sorted()
+        // Prefix matches first ("a" → Apple, Almond…), then looser contains matches.
+        let prefix   = allNames.filter { $0.hasPrefix(q) && $0 != q }
+        let contains = allNames.filter { $0.contains(q) && !$0.hasPrefix(q) }
+        return (prefix + contains).prefix(limit).map { $0.capitalized }
+    }
 }

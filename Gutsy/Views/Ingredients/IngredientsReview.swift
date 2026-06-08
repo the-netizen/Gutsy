@@ -2,7 +2,9 @@ import SwiftUI
 
 struct IngredientReviewView: View {
     @StateObject var vm: IngredientsReviewVM
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    let onConfirm: (() -> Void)?   // optional so old call sites don't break
 
     var body: some View {
         NavigationStack {
@@ -38,8 +40,12 @@ struct IngredientReviewView: View {
     
     private var confirmButton: some View {
             Button {
-                let _ = vm.confirmIngredients()
-                dismiss()
+                vm.save(using: modelContext)
+                if let onConfirm {
+                    onConfirm()   // called from Main flow — pops back
+                } else {
+                    dismiss()     // called standalone — just dismisses
+                }
             } label: {
                 Text("Confirm")
                     .font(.body)
@@ -54,16 +60,16 @@ struct IngredientReviewView: View {
             .padding(.vertical, 16)
         }
 }
-#Preview("With ingredients") {
-    IngredientReviewView(
-        vm: IngredientsReviewVM(detectedNames: [
-            "tomato", "rice", "onion", "garlic", "cumin", "parsley"
-        ])
-    )
-}
-
-#Preview("Empty") {
-    IngredientReviewView(
-        vm: IngredientsReviewVM(detectedNames: [])
-    )
-}
+//#Preview("With ingredients") {
+//    IngredientReviewView(
+//        vm: IngredientsReviewVM(detectedNames: [
+//            "tomato", "rice", "onion", "garlic", "cumin", "parsley"
+//        ]), onConfirm: <#(() -> Void)?#>
+//    )
+//}
+//
+//#Preview("Empty") {
+//    IngredientReviewView(
+//        vm: IngredientsReviewVM(detectedNames: []), onConfirm: <#(() -> Void)?#>
+//    )
+//}

@@ -3,10 +3,9 @@ import UIKit
 class Service {
     static let shared = Service()
     
-    private let mockData = true
     private let apiKey = "AIzaSyBmhfqVopo9ykxQVd68q9zfQqg-8_6KIT4"
 //    private let url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
-    private let url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+    private let url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     func extractIngredients(from image: UIImage) async throws -> [String] {
         
         // 1. Convert image to base64

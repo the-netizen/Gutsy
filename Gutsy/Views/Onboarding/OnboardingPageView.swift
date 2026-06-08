@@ -2,7 +2,8 @@ import SwiftUI
 
 struct OnboardingPageView: View {
     let page: OnboardingPage
-
+    var onFinish: () -> Void = {} //
+    
     var body: some View {
         if !page.isLastPage{
             regularPages
@@ -66,7 +67,7 @@ struct OnboardingPageView: View {
             
             Spacer()
 
-            CameraButton()
+            CameraButton(onFinish: onFinish)
                 .frame(height: 100)
             
             // Space reserved for the dot indicators below
