@@ -8,11 +8,11 @@ struct SplashScreenView: View {
 
     var body: some View {
         if isActive {
-//            if hasCompletedOnboarding{
+            if hasCompletedOnboarding{
                 Main()
-//            } else {
-//                OnboardingView()
-//            }
+            } else {
+                OnboardingView()
+            }
         } else {
             splashContent
                 .onAppear {

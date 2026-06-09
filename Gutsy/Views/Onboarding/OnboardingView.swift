@@ -12,7 +12,9 @@ struct OnboardingView: View {
             // Swipeable pages
             TabView(selection: $currentPage) {
                 ForEach(pages) { page in
-                    OnboardingPageView(page: page)
+                    OnboardingPageView(page: page){
+                        hasCompletedOnboarding = true   // onboarding done
+                    }
                         .tag(page.id)
                 }
             }
