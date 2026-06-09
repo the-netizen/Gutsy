@@ -3,8 +3,14 @@ import UIKit
 class Service {
     static let shared = Service()
     
-    private let apiKey = "AIzaSyBmhfqVopo9ykxQVd68q9zfQqg-8_6KIT4"
-//    private let url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    private let apiKey: String = {
+        guard let url = Bundle.main.url(forResource: "Secrets", withExtension: "plist"),
+              let dict = NSDictionary(contentsOf: url),
+              let key = dict["GeminiAPIKey"] as? String, !key.isEmpty else {
+            fatalError("Missing GeminiAPIKey in Secrets.plist")
+        }
+        return key
+    }()
     private let url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     func extractIngredients(from image: UIImage) async throws -> [String] {
         

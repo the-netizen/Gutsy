@@ -82,4 +82,12 @@ class WeeklyStatsVM: ObservableObject {
     func count(for group: SuperSixGroups) -> Int {
         countPerGroup[group.rawValue] ?? 0
     }
+    
+    // Target unique plants per group for a "full" bar. Tune as you like.
+    let perGroupTarget = 5
+
+    // 0.0...1.0 fill for a group's bar
+    func progress(for group: SuperSixGroups) -> Double {
+        min(Double(count(for: group)) / Double(perGroupTarget), 1.0)
+    }
 }
