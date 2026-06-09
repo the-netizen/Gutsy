@@ -1,4 +1,6 @@
 import Foundation
+import UIKit
+import SwiftData
 internal import Combine
 
 @MainActor
@@ -7,11 +9,14 @@ class IngredientsReviewVM: ObservableObject {
     @Published var editingIngredientID: UUID? = nil  // which card is in edit mode
     @Published var isAddingNew = false  // controls inline add card
     @Published var draftName = "" // temp editing/adding names
-    init(detectedNames: [String]) {
-          self.ingredients = detectedNames.map { Ingredient(name: $0.capitalized) }
-      }
+    private let capturedImage: UIImage?
 
-      // MARK: - Edit existing
+    init(detectedNames: [String], capturedImage: UIImage? = nil) {
+        self.ingredients = detectedNames.map { Ingredient(name: $0.capitalized) }
+        self.capturedImage = capturedImage
+    }
+
+      /// Editing
 
       func startEditing(_ ingredient: Ingredient) {
           cancelAdd()                          // close add card if open
@@ -36,6 +41,8 @@ class IngredientsReviewVM: ObservableObject {
           draftName = ""
       }
 
+    /// Adding
+    
       func showAddCard() {
           cancelEdit()                         // close edit mode if open
           isAddingNew = true
@@ -57,15 +64,49 @@ class IngredientsReviewVM: ObservableObject {
           draftName = ""
       }
 
+    var suggestions: [String] {
+        PlantDB.shared.suggestions(matching: draftName)
+    }
+
+    func selectSuggestion(_ name: String) { // tapping suggestion fills the field
+        draftName = name
+        if isAddingNew {
+            confirmAdd()
+        } else if editingIngredientID != nil {
+            saveEdit()
+        }
+    }
+
       func delete(_ ingredient: Ingredient) {
           ingredients.removeAll { $0.id == ingredient.id }
       }
 
-      func confirmIngredients() -> [Plants] {
-          let matched = PlantDB.shared.filterPlants(
-              from: ingredients.map { $0.name.lowercased() }
-          )
-          print("✅ Matched plants:", matched.map { "\($0.name) → \($0.group)" })
-          return matched
-      }
+    /// Confirm and Save ingredients
+    
+    func save(using context: ModelContext) {
+            // 1. Match confirmed ingredient names against plant database
+            let confirmedPlants = PlantDB.shared.filterPlants(
+                from: ingredients.map { $0.name.lowercased() }
+            )
+            print("✅ Matched plants:", confirmedPlants.map { "\($0.name) → \($0.group)" })
+
+            // 2. Save image to device file system — returns path string
+            let imagePath: String?
+            if let image = capturedImage {
+                imagePath = ImageStorage.save(image)
+            } else {
+                imagePath = nil
+            }
+
+            // 3. Create the MealLog with all data
+            let log = MealLog(
+                date: .now,
+                imagePath: imagePath,
+                confirmedPlants: confirmedPlants
+            )
+
+            // 4. Insert into SwiftData — persists to device storage
+            context.insert(log)
+            print("✅ MealLog saved: \(confirmedPlants.count) plants, image: \(imagePath ?? "none")")
+        }
   }

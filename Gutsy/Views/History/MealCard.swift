@@ -66,8 +66,8 @@ struct MealCard: View {
     // Loads image from file path — shows placeholder if nil
     private var mealImage: some View {
         Group {
-            if let path = meal.imagePath,
-               let uiImage = UIImage(contentsOfFile: path) {
+            if let filename = meal.imagePath,
+               let uiImage = ImageStorage.load(from: filename) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()

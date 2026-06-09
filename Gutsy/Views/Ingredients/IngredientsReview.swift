@@ -60,16 +60,16 @@ struct IngredientReviewView: View {
             .padding(.vertical, 16)
         }
 }
-//#Preview("With ingredients") {
-//    IngredientReviewView(
-//        vm: IngredientsReviewVM(detectedNames: [
-//            "tomato", "rice", "onion", "garlic", "cumin", "parsley"
-//        ]), onConfirm: <#(() -> Void)?#>
-//    )
-//}
-//
-//#Preview("Empty") {
-//    IngredientReviewView(
-//        vm: IngredientsReviewVM(detectedNames: []), onConfirm: <#(() -> Void)?#>
-//    )
-//}
+#Preview("With ingredients") {
+    IngredientReviewView(
+        vm: IngredientsReviewVM(detectedNames: [
+            "tomato", "rice", "onion", "garlic", "cumin", "parsley"
+        ]), onConfirm: {}
+    )
+}
+
+#Preview("Empty") {
+    IngredientReviewView(
+        vm: IngredientsReviewVM(detectedNames: []), onConfirm: {}
+    )
+}

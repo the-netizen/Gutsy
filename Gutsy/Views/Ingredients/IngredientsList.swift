@@ -31,6 +31,16 @@ struct IngredientsList: View {
                                      bottom: 4, trailing: 16))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
+            
+            //drop down
+            if vm.editingIngredientID == ingredient.id, !vm.suggestions.isEmpty {
+                IngredientsDropdown(suggestions: vm.suggestions) { name in
+                    vm.selectSuggestion(name)
+                }
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 4, trailing: 16))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            }
         }
     }
 
@@ -45,6 +55,16 @@ struct IngredientsList: View {
                                      bottom: 4, trailing: 16))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
+            
+            // drop down
+            if !vm.suggestions.isEmpty {
+                IngredientsDropdown(suggestions: vm.suggestions) { name in
+                    vm.selectSuggestion(name)
+                }
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 4, trailing: 16))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            }
         }
 
         addButton

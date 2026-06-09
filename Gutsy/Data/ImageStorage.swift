@@ -19,11 +19,18 @@ struct ImageStorage {
         }
     }
 
+//    static func load(from filename: String) -> UIImage? {
+//        let url = documentsURL().appendingPathComponent(filename)
+//        return UIImage(contentsOfFile: url.path)   // rebuild path at read time
+//    }
+
     static func load(from filename: String) -> UIImage? {
         let url = documentsURL().appendingPathComponent(filename)
-        return UIImage(contentsOfFile: url.path)   // rebuild path at read time
+        let exists = FileManager.default.fileExists(atPath: url.path)
+        print("🖼️ load:", filename, "| exists:", exists, "| dir:", url.deletingLastPathComponent().lastPathComponent)
+        return UIImage(contentsOfFile: url.path)
     }
-
+    
     // Always resolves to the CURRENT container's Documents dir
     private static func documentsURL() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
