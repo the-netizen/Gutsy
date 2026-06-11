@@ -46,7 +46,7 @@ struct MealCard: View {
                     )
                 VStack(alignment: .leading, spacing: 4) {
                     if let tag = meal.tag { //show only if theres tag
-                        tagPill(tag)
+                        TagPill(text: tag)
                     }
                 }
                 .padding(8)

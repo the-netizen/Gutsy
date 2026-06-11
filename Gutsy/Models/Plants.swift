@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 struct Plants: Codable {
     let name: String
@@ -6,6 +7,9 @@ struct Plants: Codable {
     let benefit: String
     
     var id: String { name } //identified via unique name
+}
+extension Plants {
+    var groupEnum: SuperSixGroups? { SuperSixGroups(rawValue: group) }
 }
 
 enum SuperSixGroups: String, Codable, CaseIterable{
@@ -28,6 +32,18 @@ enum SuperSixGroups: String, Codable, CaseIterable{
             case .herbsAndSpices: return "bacteria_herbs"
             }
         }
+    
+    //colors
+    var color: Color {
+        switch self {
+        case .fruits:         return .colorFruits
+        case .vegetables:     return .colorVegetables
+        case .wholegrains:    return .colorWholegrains
+        case .legumes:        return .colorLegumes
+        case .nutsAndSeeds:   return .colorNuts
+        case .herbsAndSpices: return .colorHerbs
+        }
+    }
     
     //description
     var description: String {
@@ -74,4 +90,5 @@ enum SuperSixGroups: String, Codable, CaseIterable{
                 """
         }
     }// description
+    
 }

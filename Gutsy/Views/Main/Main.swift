@@ -44,6 +44,7 @@ struct Main: View {
     
     private var header: some View {
         HStack {
+            
             Image("gutsy_logo")
                 .resizable()
                 .scaledToFit()
@@ -59,7 +60,7 @@ struct Main: View {
             //                    .clipShape(Circle())
             //            }
         }
-        .padding(.horizontal, 16)
+//        .padding(.horizontal, 16)
         .padding(.top, 16)
     }
     
@@ -70,13 +71,7 @@ struct Main: View {
             PlantsPerWeekCard(plantCount: statsVM.plantsPerWeekCount)
             OverallDiversityCard(percentage: statsVM.diversityPercentage)
         }
-//        .padding(.horizontal, 16)
     }
-
-//    private var historySection: some View {
-//        HistorySection(meals: allMealLogs)
-//            .padding(.horizontal, 16)
-//    }
 }
 
 #Preview {
