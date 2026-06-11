@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct MealCard: View {
     let meal: MealLog
@@ -36,31 +37,30 @@ struct MealCard: View {
     /// Gallery style in historyView
     private var galleryCard: some View {
         ZStack(alignment: .center) {
-            ZStack(alignment: .topLeading){
+            ZStack(alignment: .topLeading) {
                 mealImage
-                    .frame(width: 160, height: 160)
+                    .frame(maxWidth: .infinity)
+                    .aspectRatio(1, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(Color(.systemBackground), lineWidth: 5)
                     )
-                VStack(alignment: .leading, spacing: 4) {
-                    if let tag = meal.tag { //show only if theres tag
-                        TagPill(text: tag)
-                    }
+//                    .clipped()
+
+                if let tag = meal.tags.first {
+                    TagPill(tag: tag).padding(8)
                 }
-                .padding(8)
-            }//image + tag
+            }
 
             Text(meal.formattedTime)
-                .font(.title2)
-                .bold()
+                .font(.title3).bold()
                 .foregroundColor(.white)
+                .shadow(radius: 2)
                 .padding(8)
         }
         .onTapGesture { onTap() }
-        .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 4)
-//        .padding(3)
+        .shadow(color: Color.black.opacity(0.12), radius: 6, y: 3)
     }
 
     // Loads image from file path — shows placeholder if nil
@@ -99,29 +99,33 @@ struct MealCard: View {
 }
 
 #Preview("Compact") {
-    let mock = MealLog(
-        date: Date(),
-        imagePath: nil,
-        confirmedPlants: [],
-        tag: "Healthy Meal"
-    )
-    HStack(spacing: 5) {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: MealLog.self, Tag.self, configurations: config)
+
+    let tag = Tag(name: "Healthy Meal", colorName: "color_fruits")
+    let mock = MealLog(confirmedPlants: [], tags: [tag])
+    container.mainContext.insert(mock)
+
+    return HStack(spacing: 5) {
         MealCard(meal: mock, style: .compact, onTap: {})
         MealCard(meal: mock, style: .compact, onTap: {})
         MealCard(meal: mock, style: .compact, onTap: {})
     }
-//    .padding()
+    .modelContainer(container)
 }
 
 #Preview("Gallery") {
-    let mock = MealLog(
-        date: Date(),
-        imagePath: nil,
-        confirmedPlants: [],
-        tag: "High in Fiber"
-    )
-    HStack(spacing: 8) {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: MealLog.self, Tag.self, configurations: config)
+
+    let tag = Tag(name: "High in Fiber", colorName: "color_legumes")
+    let mock = MealLog(confirmedPlants: [], tags: [tag])
+    container.mainContext.insert(mock)
+
+    return HStack(spacing: 8) {
         MealCard(meal: mock, style: .gallery, onTap: {})
         MealCard(meal: mock, style: .gallery, onTap: {})
     }
+    .padding()
+    .modelContainer(container)
 }

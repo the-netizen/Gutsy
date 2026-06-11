@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct HistorySection: View {
     let meals: [MealLog]
@@ -71,30 +72,32 @@ struct HistorySection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
-
 #Preview("With meals") {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: MealLog.self, Tag.self, configurations: config)
+
+    let healthy = Tag(name: "Healthy Meal", colorName: "color_fruits")
     let mocks = (0..<4).map { i in
         MealLog(
-            date: Calendar.current.date(
-                byAdding: .hour, value: -i * 3, to: Date()
-            ) ?? Date(),
-            imagePath: nil,
+            date: Calendar.current.date(byAdding: .hour, value: -i * 3, to: Date()) ?? Date(),
             confirmedPlants: [],
-            tag: i == 0 ? "Healthy Meal" : nil
+            tags: i == 0 ? [healthy] : []
         )
     }
-    HistorySection(
-        meals: mocks
-    )
-    .padding()
-    .background(Color(.systemGray6))
+    mocks.forEach { container.mainContext.insert($0) }
+
+    return HistorySection(meals: mocks)
+        .padding()
+        .background(Color(.systemGray6))
+        .modelContainer(container)
 }
 
 #Preview("Empty") {
-    HistorySection(
-        meals: []
-    )
-    .padding()
-    .background(Color(.systemGray6))
-}
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: MealLog.self, Tag.self, configurations: config)
 
+    return HistorySection(meals: [])
+        .padding()
+        .background(Color(.systemGray6))
+        .modelContainer(container)
+}
