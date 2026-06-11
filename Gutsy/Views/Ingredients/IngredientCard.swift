@@ -33,7 +33,7 @@ struct IngredientCard: View {
                 // Checkmark to confirm edit
                 Button(action: onSave) {
                     Image(systemName: "checkmark")
-                        .foregroundColor(.pink)
+                        .foregroundColor(.accentColor)
                         .font(.body)
                 }
                 .buttonStyle(.plain)

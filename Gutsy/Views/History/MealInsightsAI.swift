@@ -7,10 +7,10 @@ struct MealInsightsAI: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack{
                 Image(systemName: "sparkles")
-                    .foregroundColor(.pink)
+                    .foregroundColor(.accentColor)
                 Text("Meal Insight")
                     .font(.body).bold()
-                    .foregroundColor(.pink)
+                    .foregroundColor(.accentColor)
             }
             Text(insight ?? "No insight available for this meal yet.")
                 .font(.subheadline)
@@ -19,7 +19,7 @@ struct MealInsightsAI: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Color.pink.opacity(0.12))
+        .background(Color.accentColor.opacity(0.12))
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .dynamicTypeSize(...DynamicTypeSize.accessibility2) // clip extreme scaling
     }

@@ -53,7 +53,7 @@ struct IngredientReviewView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(Color.pink)
+                    .background(Color.accentColor)
                     .clipShape(Capsule())
                     .padding(.horizontal, 40)
             }

@@ -78,7 +78,7 @@ struct IngredientsList: View {
                 Spacer()
                 Image(systemName: "plus")
                     .font(.title3)
-                    .foregroundColor(.pink)
+                    .foregroundColor(.accentColor)
                 Spacer()
             }
             .padding(.vertical, 14)

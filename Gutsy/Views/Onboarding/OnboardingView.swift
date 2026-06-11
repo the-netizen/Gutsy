@@ -33,7 +33,7 @@ struct OnboardingView: View {
         HStack(spacing: 8) {
             ForEach(pages) { page in
                 Circle()
-                    .fill(currentPage == page.id ? Color.pink : Color.gray.opacity(0.4))
+                    .fill(currentPage == page.id ? Color.accentColor : Color.gray.opacity(0.4))
                     .frame(
                         width: currentPage == page.id ? 10 : 7,
                         height: currentPage == page.id ? 10 : 7

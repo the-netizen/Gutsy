@@ -27,7 +27,7 @@ struct DiversityPopup: View {
                         .foregroundColor(.white)
                         .frame(width: 160)
                         .padding(.vertical, 14)
-                        .background(Color.pink)
+                        .background(Color.accentColor)
                         .clipShape(Capsule())
                 }
             }

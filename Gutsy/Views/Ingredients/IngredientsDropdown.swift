@@ -37,7 +37,7 @@ struct IngredientsDropdown: View {
 private struct SuggestionRowStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .background(configuration.isPressed ? Color.pink.opacity(0.18) : Color.clear)
+            .background(configuration.isPressed ? Color.accentColor.opacity(0.18) : Color.clear)
     }
 }
 

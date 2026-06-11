@@ -18,7 +18,7 @@ struct PlantsPerWeekVisual: View {
 
     private func tickColor(for index: Int) -> Color {
         let filledTicks = Int(progress * Double(totalTicks))
-        return index < filledTicks ? Color.pink : Color(.systemGray4)
+        return index < filledTicks ? Color.accentColor : Color(.systemGray4)
     }
 }
 

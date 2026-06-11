@@ -15,7 +15,7 @@ struct CameraButton: View {
             } label: {
                 ZStack {
                     Circle()
-                        .foregroundColor(.pink)
+                        .foregroundColor(.accentColor)
                         .frame(width: 60, height: 60)
                         .shadow(color: .pink.opacity(0.4), radius: 8, y: 4)
                     Image(systemName: "plus")
