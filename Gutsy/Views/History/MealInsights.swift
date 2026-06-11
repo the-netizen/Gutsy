@@ -51,7 +51,7 @@ struct MealInsights: View {
             }
         } else if isEditingTag {
             VStack(alignment: .leading, spacing: 8) {
-                EditableTagPill(text: $draftTag) { commitTag() }
+                EditableTagPill(text: $draftTag, tint: Color(draftColor)) { commitTag() }
                 colorPicker
             }
         } else {

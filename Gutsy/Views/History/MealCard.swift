@@ -44,7 +44,7 @@ struct MealCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(.systemBackground), lineWidth: 5)
+                            .stroke(Color(.systemBackground), lineWidth: 3)
                     )
 //                    .clipped()
 
@@ -125,7 +125,8 @@ struct MealCard: View {
     return HStack(spacing: 8) {
         MealCard(meal: mock, style: .gallery, onTap: {})
         MealCard(meal: mock, style: .gallery, onTap: {})
+        MealCard(meal: mock, style: .gallery, onTap: {})
     }
-    .padding()
+//    .padding()
     .modelContainer(container)
 }

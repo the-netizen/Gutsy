@@ -3,14 +3,21 @@ import SwiftData
 
 struct HistoryPage: View {
     @Query(sort: \MealLog.date, order: .reverse) private var allMealLogs: [MealLog]
+    @Query(sort: \Tag.name) private var allTags: [Tag]
+    @State private var filter = TagFilterState()
+    @State private var showFilterPanel = false
     @State private var selectedMeal: MealLog? = nil
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 5), count: 3)
 
-    // Group meals by day label ("Today", "Yesterday", weekday…), preserving recency order
+    //filter by tags
+    private var filteredMeals: [MealLog] {
+        filter.apply(to: allMealLogs)
+    }
+
+    // Group meals by day label
     private var grouped: [(label: String, meals: [MealLog])] {
-        let groups = Dictionary(grouping: allMealLogs) { $0.dayLabel }
-        // Order sections by each section's newest meal
+        let groups = Dictionary(grouping: filteredMeals) { $0.dayLabel }
         return groups
             .map { (label: $0.key, meals: $0.value) }
             .sorted { ($0.meals.first?.date ?? .distantPast) > ($1.meals.first?.date ?? .distantPast) }
@@ -37,6 +44,25 @@ struct HistoryPage: View {
         }
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            showFilterPanel.toggle()
+                        } label: {
+                            Image(systemName: "line.3.horizontal.decrease")
+                        }
+                        .tint(filter.isFiltering ? .accentColor : .primary)
+                        //i want to change bg color of button if filter is on
+                    }
+                }
+                .overlay(alignment: .topTrailing) {
+                    if showFilterPanel {
+                        TagFilterPanel(allTags: allTags, filter: filter)
+                            .padding(.top, 8).padding(.trailing, 12)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+                }
+                .animation(.easeInOut(duration: 0.15), value: showFilterPanel)
         .sheet(item: $selectedMeal) { meal in
             MealInsights(meal: meal)
                 .presentationDetents([.fraction(0.8)]) // 80% size
@@ -49,33 +75,26 @@ struct HistoryPage: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: MealLog.self, Tag.self, configurations: config)
 
+    // Sample tags
+    let healthy   = Tag(name: "Healthy Meal", colorName: "color_fruits")
+    let highFruit = Tag(name: "High fruits", colorName: "color_vegetables")
+    let highFiber = Tag(name: "High Fiber", colorName: "color_herbs")
+    [healthy, highFruit, highFiber].forEach { container.mainContext.insert($0) }
+
     let p1 = Plants(name: "Apple", group: SuperSixGroups.fruits.rawValue, benefit: "Rich in fiber")
     let p2 = Plants(name: "Spinach", group: SuperSixGroups.vegetables.rawValue, benefit: "High in iron")
-    let p3 = Plants(name: "Lentils", group: SuperSixGroups.legumes.rawValue, benefit: "Great protein")
-    let p4 = Plants(name: "Oats", group: SuperSixGroups.wholegrains.rawValue, benefit: "Beta-glucan fiber")
-    let p5 = Plants(name: "Almond", group: SuperSixGroups.nutsAndSeeds.rawValue, benefit: "Healthy fats")
-    let p6 = Plants(name: "Cinnamon", group: SuperSixGroups.herbsAndSpices.rawValue, benefit: "Warming spice")
 
-    let lunch     = Tag(name: "Lunch",     colorName: "color_vegetables")
-    let breakfast = Tag(name: "Breakfast", colorName: "color_wholegrains")
-    let dinner    = Tag(name: "Dinner",    colorName: "color_herbs")
-    [lunch, breakfast, dinner].forEach { container.mainContext.insert($0) }
-
-    let calendar = Calendar.current
     let now = Date()
-    let yesterday = calendar.date(byAdding: .day, value: -1, to: now)!
-    let earlier = calendar.date(byAdding: .day, value: -3, to: now)!
+    let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: now)!
 
     let meals: [MealLog] = [
-        MealLog(date: now, confirmedPlants: [p1, p2], tags: [lunch], mealInsight: "Nice mix of fruit and veg."),
-//        MealLog(date: now.addingTimeInterval(-3600), confirmedPlants: [p4, p6], tags: [breakfast], mealInsight: "Wholegrains and spices boost fiber."),
-//        MealLog(date: yesterday, confirmedPlants: [p3, p5], tags: [dinner], mealInsight: "Protein and healthy fats."),
-//        MealLog(date: earlier, confirmedPlants: [p2, p3, p6], tags: [], mealInsight: "Greens and legumes are great for diversity.")
+        MealLog(date: now, confirmedPlants: [p1, p2], tags: [healthy]),
+        MealLog(date: now.addingTimeInterval(-3600), confirmedPlants: [p1], tags: [highFruit]),
+        MealLog(date: yesterday, confirmedPlants: [p2], tags: [highFiber]),
+        MealLog(date: yesterday.addingTimeInterval(-7200), confirmedPlants: [p1, p2], tags: [])
     ]
     meals.forEach { container.mainContext.insert($0) }
 
-    return NavigationStack {
-        HistoryPage()
-    }
-    .modelContainer(container)
+    return NavigationStack { HistoryPage() }
+        .modelContainer(container)
 }

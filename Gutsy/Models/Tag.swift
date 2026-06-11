@@ -12,11 +12,7 @@ class Tag {
         self.colorName = colorName
     }
 
-    // Look up the asset color by name
-    var color: Color {
-        Color(colorName)
-    }
-    
+    var color: Color { Color(colorName) }
 }
 
 extension Tag {
@@ -24,4 +20,5 @@ extension Tag {
         "color_fruits", "color_vegetables", "color_wholegrains",
         "color_legumes", "color_nuts", "color_herbs"
     ]
+    static let maxNameLength = 12   // capped
 }
