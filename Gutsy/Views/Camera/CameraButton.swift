@@ -1,15 +1,20 @@
 import SwiftUI
 
+struct CapturedMeal: Identifiable { //to make sure image is captured
+    let id = UUID()
+    let image: UIImage
+}
+
 struct CameraButton: View {
     let onFinish: () -> Void
-    @State private var showFlow = false
     
     @State private var showCamera = false
     @State private var capturedImage: UIImage? = nil
+    @State private var mealToProcess: CapturedMeal? = nil
+
     
     var body: some View {
         ZStack {
-            //            Spacer()
             Button {
                 showCamera = true
             } label: {
@@ -31,26 +36,24 @@ struct CameraButton: View {
             CameraPicker(selectedImage: $capturedImage, isPresented: $showCamera)
                 .ignoresSafeArea()
         }
-        // 2. Flow (loading → review) — presented only after camera is gone
-        .fullScreenCover(isPresented: $showFlow) {
-            MealCaptureFlow(image: capturedImage) {
-                showFlow = false
+        // only present if meal captured
+        .fullScreenCover(item: $mealToProcess) { meal in
+            MealCaptureFlow(image: meal.image) {
+                mealToProcess = nil
                 onFinish()
             }
         }
-        
-        //    private func handleDismiss() {
-        //        guard let image = capturedImage else { return }
-        //        flow.didCaptureImage(image)
-        //    }
     }
     private func startFlowIfCaptured() {
-        // If user cancelled camera there's no image — don't start the flow
-        if capturedImage != nil { showFlow = true }
+        guard let image = capturedImage else {
+            return
+        } //nth happens when user cancels camera
+       mealToProcess = CapturedMeal(image: image)
+       capturedImage = nil //reset for next capture
     }
 }
 #Preview("Camera Button") {
     CameraButton(onFinish: {})
-        .background(Color.bg) // optional if you have a custom background color
+        .background(Color.bg)
 //        .padding()
 }
