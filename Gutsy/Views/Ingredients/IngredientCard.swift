@@ -51,7 +51,7 @@ struct IngredientCard: View {
         .padding(.vertical, 14)
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive, action: onDelete) {
                 Label("", systemImage: "trash")

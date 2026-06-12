@@ -19,7 +19,7 @@ struct TagPill: View {
             }
         }
         .foregroundColor(.primary)
-        .padding(.horizontal, 8).padding(.vertical, 4)
+        .padding(.horizontal, 8).padding(.vertical, 6)
         .background(
                 Capsule()
                     .fill(Color(.white).opacity(0.95)) //white
@@ -42,7 +42,7 @@ struct TagFilterChip: View {
             Text(tag.name)
                 .font(.system(.caption2, weight: .medium))
                 .foregroundColor(.primary)
-                .padding(.horizontal, 10).padding(.vertical, 6)
+                .padding(.horizontal, 8).padding(.vertical, 6)
                 .background(tag.color.opacity(isSelected ? 0.9 : 0.25))
                 .clipShape(Capsule())
                 .overlay(Capsule().stroke(tag.color, lineWidth: 1))
@@ -75,7 +75,7 @@ struct EditableTagPill: View {
                 }
         }
         .foregroundColor(.primary)
-        .padding(.horizontal, 10).padding(.vertical, 6)
+        .padding(.horizontal, 8).padding(.vertical, 6)
         .background((tint ?? Color(.systemBackground)).opacity(tint == nil ? 1 : 0.35))   // ← tinted when supplied in edit mode
         .clipShape(Capsule())
         .overlay(Capsule().stroke(tint ?? Color(.systemGray4), lineWidth: tint == nil ? 0.5 : 1))

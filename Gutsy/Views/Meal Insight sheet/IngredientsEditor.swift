@@ -20,11 +20,26 @@ struct IngredientsEditor: View {
                             onDelete: isEditing ? { delete(plant) } : nil
                         )
                     }
-                    if isEditing { addTile }
-                }
-            }
 
-            if showPicker { picker }
+                    if isEditing {
+                        if showPicker {
+                            // "+" has transformed into the adding box
+                            AddIngredientBox(
+                                draft: $draft,
+                                suggestions: PlantDB.shared.suggestions(matching: draft),
+                                onSelect: { add(named: $0) },
+                                onCancel: {
+                                    showPicker = false
+                                    draft = ""
+                                }
+                            )
+                        } else {
+                            addTile
+                        }
+                    }
+                }
+                .padding(.bottom, 4)
+            }
         }
     }
 
@@ -35,7 +50,10 @@ struct IngredientsEditor: View {
             Button {
                 withAnimation(.easeInOut(duration: 0.15)) {
                     isEditing.toggle()
-                    if !isEditing { showPicker = false; draft = "" }
+                    if !isEditing {
+                        showPicker = false
+                        draft = ""
+                    }
                 }
             } label: {
                 Image(systemName: isEditing ? "checkmark" : "pencil")
@@ -69,23 +87,6 @@ struct IngredientsEditor: View {
         .buttonStyle(.plain)
     }
 
-    private var picker: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            TextField("Type to search ingredients…", text: $draft)
-                .font(.subheadline)
-                .padding(.horizontal, 12).padding(.vertical, 10)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(.systemGray4), lineWidth: 0.5))
-
-            let suggestions = PlantDB.shared.suggestions(matching: draft)
-            if !suggestions.isEmpty {
-                IngredientsDropdown(suggestions: suggestions) { add(named: $0) }
-            }
-        }
-        .padding(.top, 10)
-    }
-
     private func delete(_ plant: Plants) {
         meal.confirmedPlants.removeAll { $0.name == plant.name }
         regenerateInsight()
@@ -93,7 +94,9 @@ struct IngredientsEditor: View {
 
     private func add(named name: String) {
         guard let plant = PlantDB.shared.lookup(name),
-              !meal.confirmedPlants.contains(where: { $0.name.lowercased() == plant.name.lowercased() }) else {
+              !meal.confirmedPlants.contains(where: {
+                  $0.name.lowercased() == plant.name.lowercased()
+              }) else {
             draft = ""; showPicker = false; return
         }
         meal.confirmedPlants.append(plant)
@@ -112,11 +115,9 @@ struct IngredientsEditor: View {
 }
 
 #Preview("IngredientsEditor") {
-    // In-memory SwiftData container for previews
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: MealLog.self, Tag.self, configurations: config)
 
-    // Mock meal with some plants
     let mockMeal = MealLog(confirmedPlants: [
         Plants(name: "Strawberry", group: "Fruits", benefit: "Rich in vitamin C and antioxidants."),
         Plants(name: "Cauliflower", group: "Vegetables", benefit: "High in fibre and vitamins."),

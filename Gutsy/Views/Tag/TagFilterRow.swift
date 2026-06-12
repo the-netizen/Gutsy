@@ -30,7 +30,7 @@ struct TagFilterRow: View {
             Button(action: onEdit) {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.secondary)
-                    .font(.system(.caption, weight: .bold))
+                    .font(.system(.body, weight: .bold))
             }
             .buttonStyle(.plain)
         }

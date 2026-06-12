@@ -51,14 +51,14 @@ struct MealCard: View {
                 if let tag = meal.tags.first {
                     TagPill(tag: tag).padding(8)
                 }
-            }
+            }//z-tag
 
             Text(meal.formattedTime)
                 .font(.title3).bold()
                 .foregroundColor(.white)
                 .shadow(radius: 2)
                 .padding(8)
-        }
+        }//z-time
         .onTapGesture { onTap() }
         .shadow(color: Color.black.opacity(0.12), radius: 6, y: 3)
     }
