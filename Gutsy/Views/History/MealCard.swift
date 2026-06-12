@@ -84,18 +84,18 @@ struct MealCard: View {
     }
 
     //temporary tags
-    private func tagPill(_ text: String) -> some View {
-        Text(text)
-            .font(.system(size: 11, weight: .medium))
-            .foregroundColor(.primary)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(Color(.systemBackground).opacity(0.9))
-            .clipShape(Capsule())
-            .overlay(
-                Capsule().stroke(Color(.systemGray4), lineWidth: 0.5)
-            )
-    }
+//    private func tagPill(_ text: String) -> some View {
+//        Text(text)
+//            .font(.system(size: 11, weight: .medium))
+//            .foregroundColor(.primary)
+//            .padding(.horizontal, 8)
+//            .padding(.vertical, 4)
+//            .background(Color(.systemBackground).opacity(0.9))
+//            .clipShape(Capsule())
+//            .overlay(
+//                Capsule().stroke(Color(.systemGray4), lineWidth: 0.5)
+//            )
+//    }
 }
 
 #Preview("Compact") {

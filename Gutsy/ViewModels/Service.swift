@@ -121,6 +121,47 @@ class Service {
         
         return ingredients
     }
+    func generateInsight(for plantNames: [String]) async throws -> String {
+        guard !plantNames.isEmpty else { return "No plants detected in this meal." }
+
+        let body: [String: Any] = [
+            "contents": [[
+                "parts": [[
+                    "text": """
+                    You are a friendly gut-health assistant for an app based on the "30 plants per week" concept.
+                    A meal contained these plant ingredients: \(plantNames.joined(separator: ", ")).
+                    Write ONE encouraging sentence (max 25 words) about how this meal supports gut health and microbiome diversity.
+                    Plain text only. No markdown, no quotes, no preamble.
+                    """
+                ]]
+            ]]
+        ]
+
+        guard let requestURL = URL(string: "\(url)?key=\(apiKey)") else { throw GeminiError.invalidURL }
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        print("🔍 Insight raw response:", String(data: data, encoding: .utf8) ?? "nil")
+
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw GeminiError.invalidResponse
+        }
+        if let error = json["error"] as? [String: Any],
+           let message = error["message"] as? String {
+            print("❌ Gemini API error (insight):", message)
+            throw GeminiError.invalidResponse
+        }
+        guard let candidates = json["candidates"] as? [[String: Any]],
+              let content = candidates.first?["content"] as? [String: Any],
+              let parts = content["parts"] as? [[String: Any]],
+              let text = parts.first?["text"] as? String else {
+            throw GeminiError.invalidResponse
+        }
+        return text.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
 
 enum GeminiError: LocalizedError {

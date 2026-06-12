@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MealInsightsAI: View {
+struct AI_Insights: View {
     let insight: String?
 
     var body: some View {
@@ -26,6 +26,6 @@ struct MealInsightsAI: View {
 }
 
 #Preview {
-    MealInsightsAI(insight: "This meal is rich in natural fruits and fiber, supporting digestion, gut diversity, and overall wellness.")
+    AI_Insights(insight: "This meal is rich in natural fruits and fiber, supporting digestion, gut diversity, and overall wellness.")
         .padding()
 }

@@ -35,4 +35,9 @@ struct ImageStorage {
     private static func documentsURL() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
+    
+    static func delete(filename: String) {
+        let url = documentsURL().appendingPathComponent(filename)
+        try? FileManager.default.removeItem(at: url)
+    }
 }

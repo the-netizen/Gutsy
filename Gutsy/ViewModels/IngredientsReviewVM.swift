@@ -84,29 +84,35 @@ class IngredientsReviewVM: ObservableObject {
     /// Confirm and Save ingredients
     
     func save(using context: ModelContext) {
-            // 1. Match confirmed ingredient names against plant database
-            let confirmedPlants = PlantDB.shared.filterPlants(
-                from: ingredients.map { $0.name.lowercased() }
-            )
-            print("✅ Matched plants:", confirmedPlants.map { "\($0.name) → \($0.group)" })
-
-            // 2. Save image to device file system — returns path string
-            let imagePath: String?
-            if let image = capturedImage {
-                imagePath = ImageStorage.save(image)
-            } else {
-                imagePath = nil
-            }
-
-            // 3. Create the MealLog with all data
-            let log = MealLog(
-                date: .now,
-                imagePath: imagePath,
-                confirmedPlants: confirmedPlants
-            )
-
-            // 4. Insert into SwiftData — persists to device storage
-            context.insert(log)
-            print("✅ MealLog saved: \(confirmedPlants.count) plants, image: \(imagePath ?? "none")")
+        // 1. Match confirmed ingredient names against plant database
+        let confirmedPlants = PlantDB.shared.filterPlants(
+            from: ingredients.map { $0.name.lowercased() }
+        )
+        print("✅ Matched plants:", confirmedPlants.map { "\($0.name) → \($0.group)" })
+        
+        // 2. Save image to device file system — returns path string
+        let imagePath: String?
+        if let image = capturedImage {
+            imagePath = ImageStorage.save(image)
+        } else {
+            imagePath = nil
         }
+        
+        // 3. Create the MealLog with all data
+        let log = MealLog(
+            date: .now,
+            imagePath: imagePath,
+            confirmedPlants: confirmedPlants
+        )
+        
+        // 4. Insert into SwiftData — persists to device storage + AI insights
+        context.insert(log)
+        let names = confirmedPlants.map { $0.name }
+        Task {
+            if let insight = try? await Service.shared.generateInsight(for: names) {
+                await MainActor.run { log.mealInsight = insight }
+            }
+        }
+        print("✅ MealLog saved: \(confirmedPlants.count) plants, image: \(imagePath ?? "none")")
+    }//save
   }
