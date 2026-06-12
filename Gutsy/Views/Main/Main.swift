@@ -5,6 +5,7 @@ struct Main: View {
     @Query(sort: \MealLog.date, order: .reverse) private var allMealLogs: [MealLog]
     @StateObject private var statsVM = WeeklyStatsVM()
     @Environment(\.modelContext) private var modelContext
+    @State private var newGroups: Set<SuperSixGroups> = []
     @State private var showDiversityPopup = false
 
 
@@ -24,12 +25,15 @@ struct Main: View {
                 .background(Color(.systemGray6))
                 .navigationBarHidden(true)
                 .overlay(alignment: .bottom) {
-                    CameraButton(onFinish: { showDiversityPopup = true })
+                    CameraButton { groups in
+                        newGroups = groups
+                        showDiversityPopup = !groups.isEmpty //only after new diversity
+                    }
                 }
                 
                 // Celebration popup
                 if showDiversityPopup {
-                    DiversityPopup { showDiversityPopup = false }
+                    DiversityPopup(newGroups: newGroups) { showDiversityPopup = false }
                 }
             }
             .onChange(of: allMealLogs) { _, newLogs in statsVM.allMealLogs = newLogs

@@ -6,7 +6,7 @@ struct CapturedMeal: Identifiable { //to make sure image is captured
 }
 
 struct CameraButton: View {
-    let onFinish: () -> Void
+    let onFinish: (Set<SuperSixGroups>) -> Void
     
     @State private var showCamera = false
     @State private var capturedImage: UIImage? = nil
@@ -38,9 +38,9 @@ struct CameraButton: View {
         }
         // only present if meal captured
         .fullScreenCover(item: $mealToProcess) { meal in
-            MealCaptureFlow(image: meal.image) {
+            MealCaptureFlow(image: meal.image) { newGroups in
                 mealToProcess = nil
-                onFinish()
+                onFinish(newGroups)
             }
         }
     }
@@ -53,7 +53,6 @@ struct CameraButton: View {
     }
 }
 #Preview("Camera Button") {
-    CameraButton(onFinish: {})
+    CameraButton(onFinish: { _ in })
         .background(Color.bg)
-//        .padding()
 }

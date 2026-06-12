@@ -67,8 +67,8 @@ struct OnboardingPageView: View {
             
             Spacer()
 
-            CameraButton(onFinish: onFinish)
-                .frame(height: 100)
+//            CameraButton(onFinish: onFinish)
+//                .frame(height: 100)
             
             // Space reserved for the dot indicators below
             Spacer().frame(height: 50)

@@ -1,8 +1,8 @@
 import SwiftUI
 import SwiftData
 struct MealCaptureFlow: View {
-    let image: UIImage                 // ← non-optional now
-    let onFinish: () -> Void
+    let image: UIImage
+    let onFinish: (Set<SuperSixGroups>) -> Void   // ← carries new groups
 
     @State private var detectedIngredients: [String]? = nil
     @State private var errorMessage: String? = nil
@@ -12,7 +12,7 @@ struct MealCaptureFlow: View {
             if let ingredients = detectedIngredients {
                 IngredientReviewView(
                     vm: IngredientsReviewVM(detectedNames: ingredients, capturedImage: image),
-                    onConfirm: onFinish
+                    onConfirm: { newGroups in onFinish(newGroups) }
                 )
             } else {
                 LoadingView()
@@ -20,7 +20,7 @@ struct MealCaptureFlow: View {
         }
         .task { await analyze() }
         .alert("Something went wrong", isPresented: .constant(errorMessage != nil)) {
-            Button("OK") { onFinish() }
+            Button("OK") { onFinish([]) }    // empty set = no popup
         } message: {
             Text(errorMessage ?? "")
         }

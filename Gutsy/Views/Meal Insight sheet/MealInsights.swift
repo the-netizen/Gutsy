@@ -9,10 +9,10 @@ struct MealInsights: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text(meal.formattedDate).font(.title3).bold()
 
-                HStack(alignment: .top, spacing: 12) {
-                    mealImage
+//                HStack(alignment: .top, spacing: 12) {
+//                    mealImage
                     AI_Insights(insight: meal.mealInsight)
-                }
+//                }
                 MealTagEditor(meal: meal)
                 IngredientsEditor(meal: meal)
                 MealInsightGraph(meal: meal)

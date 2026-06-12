@@ -83,36 +83,41 @@ class IngredientsReviewVM: ObservableObject {
 
     /// Confirm and Save ingredients
     
-    func save(using context: ModelContext) {
-        // 1. Match confirmed ingredient names against plant database
+    func save(using context: ModelContext) -> Set<SuperSixGroups> {
         let confirmedPlants = PlantDB.shared.filterPlants(
             from: ingredients.map { $0.name.lowercased() }
         )
-        print("✅ Matched plants:", confirmedPlants.map { "\($0.name) → \($0.group)" })
-        
-        // 2. Save image to device file system — returns path string
-        let imagePath: String?
-        if let image = capturedImage {
-            imagePath = ImageStorage.save(image)
-        } else {
-            imagePath = nil
-        }
-        
-        // 3. Create the MealLog with all data
-        let log = MealLog(
-            date: .now,
-            imagePath: imagePath,
-            confirmedPlants: confirmedPlants
+
+        // Snapshot this week's plants BEFORE inserting
+        let weekStart = Calendar.current.dateInterval(of: .weekOfYear, for: Date())?.start ?? .distantPast
+        let descriptor = FetchDescriptor<MealLog>(predicate: #Predicate { $0.date >= weekStart })
+        let existingThisWeek = (try? context.fetch(descriptor)) ?? []
+        let existingPlantNames = Set(
+            existingThisWeek.flatMap { $0.confirmedPlants }.map { $0.name.lowercased() }
         )
-        
-        // 4. Insert into SwiftData — persists to device storage + AI insights
+
+        // unique plants this week
+        let newPlants = confirmedPlants.filter {
+            !existingPlantNames.contains($0.name.lowercased())
+        }
+        // Groups of the new plants — for which bacteria to float
+        let celebratedGroups = Set(newPlants.compactMap { SuperSixGroups(rawValue: $0.group) })
+        print("✨ New plants this week:", newPlants.map { $0.name })
+
+        // Save image + meal
+        let imagePath = capturedImage.flatMap { ImageStorage.save($0) }
+        let log = MealLog(date: .now, imagePath: imagePath, confirmedPlants: confirmedPlants)
         context.insert(log)
+
         let names = confirmedPlants.map { $0.name }
         Task {
             if let insight = try? await Service.shared.generateInsight(for: names) {
                 await MainActor.run { log.mealInsight = insight }
             }
         }
-        print("✅ MealLog saved: \(confirmedPlants.count) plants, image: \(imagePath ?? "none")")
+
+        print("✅ MealLog saved: \(confirmedPlants.count) plants total, \(newPlants.count) new")
+        // Return groups-of-new-plants. Empty = no new plant = no score increase = no popup.
+        return celebratedGroups
     }//save
   }
