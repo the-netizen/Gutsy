@@ -55,7 +55,14 @@ class WeeklyStatsVM: ObservableObject {
     var plantGroupsEaten: Int {
         countPerGroup.values.filter { $0 > 0 }.count
     }
-
+    
+    func plantsEaten(for group: SuperSixGroups) -> [Plants] {
+        var seen = Set<String>()
+        return weeklyLogs
+            .flatMap { $0.confirmedPlants }
+            .filter { $0.group == group.rawValue }
+            .filter { seen.insert($0.name.lowercased()).inserted }  // dedupe
+    }
     // The percentage shown on the Overall Diversity ring e.g. 70.0
     // Combines two scores:
     // - Quantity score: how close to 30 plants (out of 30)

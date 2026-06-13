@@ -16,6 +16,7 @@ struct MicrobiomeOverview: View {
                     group: group,
                     count: statsVM.count(for: group),
                     progress: statsVM.progress(for: group),
+                    eatenPlants: statsVM.plantsEaten(for: group),
                     isExpanded: expandedGroup == group,
                     onToggle: {
                         withAnimation(.easeInOut(duration: 0.1)) {

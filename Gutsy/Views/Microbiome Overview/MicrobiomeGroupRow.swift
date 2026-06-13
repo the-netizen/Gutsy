@@ -3,22 +3,21 @@ import SwiftUI
 struct MicrobiomeGroupRow: View {
     let group: SuperSixGroups
     let count: Int
-    let progress: Double          // 0.0...1.0
+    let progress: Double
+    let eatenPlants: [Plants]          // ← new
     let isExpanded: Bool
     let onToggle: () -> Void
 
-    // red → orange → green by how full the bar is
     private var barColor: Color {
         switch progress {
-        case 0..<0.34:  return .red
+        case 0..<0.34:    return .red
         case 0.34..<0.67: return .orange
-        default:        return .green
+        default:          return .green
         }
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            // Tappable header row
             Button(action: onToggle) {
                 HStack(spacing: 15) {
                     Image(group.bacteriaImage)
@@ -32,8 +31,7 @@ struct MicrobiomeGroupRow: View {
 
                     Spacer()
 
-                    progressBar
-                        .frame(width: 90)
+                    progressBar.frame(width: 90)
 
                     Image(systemName: "chevron.down")
                         .foregroundColor(.secondary)
@@ -45,19 +43,58 @@ struct MicrobiomeGroupRow: View {
             }
             .buttonStyle(.plain)
 
-            // Expanded detail
             if isExpanded {
                 Divider().padding(.horizontal, 14)
-                Text(group.description)
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
+                expandedContent
             }
         }
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+    }
+
+    private var expandedContent: some View {
+        VStack(alignment: .leading, spacing: 10) {
+
+            // Short group description
+            Text(group.description)
+                .font(.footnote)
+                .foregroundColor(.secondary)
+
+            Divider()
+
+            // Eaten this week
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Eaten this week")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+
+                if eatenPlants.isEmpty {
+                    Text("No \(group.rawValue.lowercased()) logged yet this week.")
+                        .font(.caption)
+                        .foregroundColor(Color(.systemGray3))
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(eatenPlants, id: \.name) { plant in
+                                Text(plant.name.capitalized)
+                                    .font(.caption2)
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(group.color.opacity(0.2))
+                                    .clipShape(Capsule())
+                                    .overlay(
+                                        Capsule().stroke(group.color.opacity(0.4), lineWidth: 0.5)
+                                    )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(12)
     }
 
     private var progressBar: some View {
@@ -75,24 +112,40 @@ struct MicrobiomeGroupRow: View {
 
 #Preview("Collapsed") {
     MicrobiomeGroupRow(
-        group: .herbsAndSpices,
-        count: 3,
-        progress: 0.3,
+        group: .fruits,
+        count: 2,
+        progress: 0.4,
+        eatenPlants: [],
         isExpanded: false,
         onToggle: {}
     )
     .padding()
-//    .previewLayout(.sizeThatFits)
 }
 
-#Preview("Expanded") {
+#Preview("Expanded — with plants") {
     MicrobiomeGroupRow(
-        group: .herbsAndSpices,
-        count: 5,
-        progress: 1.0,
+        group: .fruits,
+        count: 3,
+        progress: 0.6,
+        eatenPlants: [
+            Plants(name: "Apple", group: "Fruits", benefit: ""),
+            Plants(name: "Strawberry", group: "Fruits", benefit: ""),
+            Plants(name: "Banana", group: "Fruits", benefit: "")
+        ],
         isExpanded: true,
         onToggle: {}
     )
     .padding()
-//    .previewLayout(.sizeThatFits)
+}
+
+#Preview("Expanded — none eaten") {
+    MicrobiomeGroupRow(
+        group: .legumes,
+        count: 0,
+        progress: 0,
+        eatenPlants: [],
+        isExpanded: true,
+        onToggle: {}
+    )
+    .padding()
 }
