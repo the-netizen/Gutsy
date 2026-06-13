@@ -76,7 +76,7 @@ struct MicrobiomeGroupRow: View {
 
 #Preview("Collapsed") {
     MicrobiomeGroupRow(
-        group: .fruits,
+        group: .herbsAndSpices,
         count: 3,
         progress: 0.3,
         isExpanded: false,

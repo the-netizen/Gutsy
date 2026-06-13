@@ -28,8 +28,6 @@ struct MealTagEditor: View {
         }
     }
 
-    // MARK: - Add Tag button
-
     private var addTagButton: some View {
         Button {
             if allTags.isEmpty {
@@ -50,8 +48,6 @@ struct MealTagEditor: View {
         }
         .buttonStyle(.plain)
     }
-
-    // MARK: - Browsing row
 
     private var browsingRow: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -82,8 +78,6 @@ struct MealTagEditor: View {
             }
         }
     }
-
-    // MARK: - Creating row
 
     private var creatingRow: some View {
         HStack(spacing: 8) {
