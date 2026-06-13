@@ -9,6 +9,7 @@ struct MicrobiomeOverview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
+                .padding(16)
 
             ForEach(SuperSixGroups.allCases, id: \.self) { group in
                 MicrobiomeGroupRow(
@@ -24,7 +25,7 @@ struct MicrobiomeOverview: View {
                 )
             }
         }
-        .padding(16)
+//        .padding(16)
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         // Info popup

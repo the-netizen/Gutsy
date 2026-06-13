@@ -33,7 +33,7 @@ struct MicrobiomeGroupRow: View {
                     Spacer()
 
                     progressBar
-                        .frame(width: 100)
+                        .frame(width: 90)
 
                     Image(systemName: "chevron.down")
                         .foregroundColor(.secondary)
@@ -52,8 +52,7 @@ struct MicrobiomeGroupRow: View {
                     .font(.footnote)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 12)
+                    .padding(12)
             }
         }
         .background(Color(.systemBackground))
@@ -94,6 +93,6 @@ struct MicrobiomeGroupRow: View {
         isExpanded: true,
         onToggle: {}
     )
-//    .padding()
+    .padding()
 //    .previewLayout(.sizeThatFits)
 }
