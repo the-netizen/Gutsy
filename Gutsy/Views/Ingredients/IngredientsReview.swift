@@ -58,7 +58,7 @@ struct IngredientReviewView: View {
                     .clipShape(Capsule())
                     .padding(.horizontal, 40)
             }
-            .padding(.vertical, 16)
+            .padding(.vertical, 20)
         }
 }
 #Preview("With ingredients") {

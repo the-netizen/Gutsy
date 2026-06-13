@@ -6,8 +6,9 @@ struct MealInsights: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 25) {
                 Text(meal.formattedDate).font(.title3).bold()
+                    .padding(.top, 20)
 
 //                HStack(alignment: .top, spacing: 12) {
 //                    mealImage

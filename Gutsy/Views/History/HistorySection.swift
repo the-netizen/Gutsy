@@ -21,10 +21,8 @@ struct HistorySection: View {
         )
         .sheet(item: $selectedMeal) { meal in
             MealInsights(meal: meal)
-                // Choose the size(s) you want:
-                .presentationDetents([.fraction(0.8)]) // 80% size
+                .presentationDetents([.fraction(0.8), .large])
                 .presentationDragIndicator(.visible)
-                .presentationBackgroundInteraction(.enabled)
         }
     }
 

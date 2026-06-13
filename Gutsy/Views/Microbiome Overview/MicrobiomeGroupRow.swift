@@ -39,7 +39,7 @@ struct MicrobiomeGroupRow: View {
                         .foregroundColor(.secondary)
                         .rotationEffect(.degrees(isExpanded ? 180 : 0))
                 }
-//                .padding(.horizontal, 12)
+                .padding(.horizontal, 12)
                 .padding(.vertical, 12)
                 .contentShape(Rectangle())
             }

@@ -12,7 +12,9 @@ struct MealInsightGraph: View {
                 barColumn
                 legend
             }
+            .frame(height: 180)  //fixed size
         }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2) //cap extreme scaling
     }
 
     private var barColumn: some View {
@@ -40,7 +42,7 @@ struct MealInsightGraph: View {
             ForEach(bars) { bar in
                 HStack(spacing: 6) {
                     Circle().fill(bar.group.color).frame(width: 10, height: 10)
-                    Text(bar.group.rawValue).font(.system(size: 11)).foregroundColor(.secondary)
+                    Text(bar.group.rawValue).font(.caption2).foregroundColor(.primary)
                 }
             }
         }

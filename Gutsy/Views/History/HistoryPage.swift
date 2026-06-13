@@ -63,12 +63,11 @@ struct HistoryPage: View {
                     }
                 }
                 .animation(.easeInOut(duration: 0.15), value: showFilterPanel)
-        .sheet(item: $selectedMeal) { meal in
-            MealInsights(meal: meal)
-                .presentationDetents([.fraction(0.8)]) // 80% size
-                .presentationDragIndicator(.visible)
-                .presentationBackgroundInteraction(.enabled)
-        }
+                .sheet(item: $selectedMeal) { meal in
+                    MealInsights(meal: meal)
+                        .presentationDetents([.fraction(0.8), .large])
+                        .presentationDragIndicator(.visible)
+                }
     }
 }
 #Preview {

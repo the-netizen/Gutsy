@@ -40,7 +40,7 @@ struct IngredientBox: View {
             Spacer(minLength: 0)
         }
         .frame(width: 150)
-        .frame(minHeight: 150)
+        .frame(minHeight: 100)
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(.systemGray5), lineWidth: 1))
