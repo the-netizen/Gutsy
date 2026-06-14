@@ -50,6 +50,15 @@ struct OnboardingPageView: View {
     
     private var lastPage: some View{
         VStack(spacing: 8) {
+            HStack{
+                Spacer()
+                Button("Skip") {
+                    onFinish()
+                }
+                .font(.system(.subheadline, weight: .medium))
+                .foregroundColor(.secondary)
+                .padding(30)
+            }
             Spacer()
             
             Text(page.title)
@@ -73,7 +82,7 @@ struct OnboardingPageView: View {
             // Space reserved for the dot indicators below
             Spacer().frame(height: 50)
         }
-    }
+    }//last page
 }
 
 #Preview("Page 1") {
