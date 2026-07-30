@@ -25,9 +25,9 @@ struct MicrobiomeOverview: View {
                     }
                 )
             }
+            .padding(.horizontal, 10)
         }
-//        .padding(16)
-        .background(Color(.systemBackground))
+        .background(.component)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         // Info popup
         .overlay(alignment: .top) {

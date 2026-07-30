@@ -29,7 +29,7 @@ struct MealCard: View {
                 .padding(.bottom, 10)
         }
         .onTapGesture { onTap() }
-        .background(Color(.systemBackground))
+        .background(.componentInner)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: Color.black.opacity(0.12), radius: 5, x: 0, y: 4)
     }
@@ -59,6 +59,7 @@ struct MealCard: View {
                 .shadow(radius: 2)
                 .padding(8)
         }//z-time
+//        .background(.componentInner)
         .onTapGesture { onTap() }
         .shadow(color: Color.black.opacity(0.12), radius: 6, y: 3)
     }

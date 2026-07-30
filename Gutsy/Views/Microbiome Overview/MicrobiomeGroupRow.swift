@@ -48,9 +48,9 @@ struct MicrobiomeGroupRow: View {
                 expandedContent
             }
         }
-        .background(Color(.systemBackground))
+        .background(.componentInner)
         .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        .shadow(color: .black.opacity(0.1), radius: 4, y: 4)
     }
 
     private var expandedContent: some View {

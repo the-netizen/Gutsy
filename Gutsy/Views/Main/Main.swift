@@ -22,7 +22,7 @@ struct Main: View {
                     }
                     .padding(.horizontal, 16)
                 }
-                .background(Color(.systemGray6))
+                .background(.bg)
                 .navigationBarHidden(true)
                 .overlay(alignment: .bottom) {
                     CameraButton { groups in

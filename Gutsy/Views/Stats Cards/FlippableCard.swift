@@ -44,7 +44,7 @@ struct FlippableCard<Front: View, Back: View>: View {
                 .padding(12)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground))
+        .background(.component)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.05), radius: 6, y: 2)
     }
