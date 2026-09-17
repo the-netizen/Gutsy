@@ -15,20 +15,20 @@ struct HistoryPage: View {
         filter.apply(to: allMealLogs)
     }
 
-    // Group meals by day label
-    private var grouped: [(label: String, meals: [MealLog])] {
-        let groups = Dictionary(grouping: filteredMeals) { $0.dayLabel }
+    // Group meals by calendar day
+    private var grouped: [(date: Date, meals: [MealLog])] {
+        let groups = Dictionary(grouping: filteredMeals) { $0.startOfDay }
         return groups
-            .map { (label: $0.key, meals: $0.value) }
-            .sorted { ($0.meals.first?.date ?? .distantPast) > ($1.meals.first?.date ?? .distantPast) }
+            .map { (date: $0.key, meals: $0.value) }
+            .sorted { $0.date > $1.date }
     }
 
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20) {
-                ForEach(grouped, id: \.label) { section in
+                ForEach(grouped, id: \.date) { section in
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(section.label)
+                        Text(section.meals.first?.historyDateLabel ?? "")
                             .font(.title3).bold()
                         LazyVGrid(columns: columns, spacing: 12) {
                             ForEach(section.meals) { meal in

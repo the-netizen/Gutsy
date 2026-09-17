@@ -7,7 +7,7 @@ struct Main: View {
     @Environment(\.modelContext) private var modelContext
     @State private var newGroups: Set<SuperSixGroups> = []
     @State private var showDiversityPopup = false
-
+    @State private var showInfo = false
 
     var body: some View {
         NavigationStack() {
@@ -17,7 +17,7 @@ struct Main: View {
                         header
                         statsCards
                         HistorySection(meals: allMealLogs)
-                        MicrobiomeOverview(statsVM: statsVM)
+                        MicrobiomeOverview(statsVM: statsVM, showInfo: $showInfo)
                         Spacer(minLength: 80)
                     }
                     .padding(.horizontal, 16)
@@ -29,6 +29,14 @@ struct Main: View {
                         newGroups = groups
                         showDiversityPopup = !groups.isEmpty //only after new diversity
                     }
+                }
+                
+                //full screen dismiss catcher for info button
+                if showInfo {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture { withAnimation { showInfo = false } }
+                        .ignoresSafeArea()
                 }
                 
                 // Celebration popup
@@ -44,7 +52,6 @@ struct Main: View {
             }
         }
     }
-    // MARK: - Header
     
     private var header: some View {
         HStack {
@@ -67,9 +74,7 @@ struct Main: View {
 //        .padding(.horizontal, 16)
         .padding(.top, 16)
     }
-    
-    // MARK: - Stats Cards
-    
+        
     private var statsCards: some View {
         HStack(spacing: 12) {
             PlantsPerWeekCard(plantCount: statsVM.plantsPerWeekCount)

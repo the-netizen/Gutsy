@@ -143,8 +143,10 @@ class Service {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("🔍 Insight raw response:", String(data: data, encoding: .utf8) ?? "nil")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+            print("❌ HTTP \(http.statusCode)")
+        } //capture ai response to generate insights if not successful
 
         guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             throw GeminiError.invalidResponse

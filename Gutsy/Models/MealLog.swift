@@ -45,7 +45,7 @@ class MealLog: Identifiable{
     // Full date for detail sheet header e.g. "3:00pm, 11/12/2026"
     var formattedDate: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "h:mma, dd/MM/yyyy"
+        formatter.dateFormat = "dd/MM/yyyy, h:mma"
         return formatter.string(from: date).lowercased()
     }
 
@@ -63,13 +63,27 @@ class MealLog: Identifiable{
         return formatter.string(from: date)
     }
 
-    // "Today", "Yesterday", "Saturday"
-    var dayLabel: String {
+    // Grouping key — one entry per calendar day, ignoring time
+    var startOfDay: Date {
+        Calendar.current.startOfDay(for: date)
+    }
+
+    // Section header — "Today", "Yesterday", "Sunday, 26 July", "21 July", "21 July 2025"
+    var historyDateLabel: String {
         let calendar = Calendar.current
         if calendar.isDateInToday(date) { return "Today" }
         if calendar.isDateInYesterday(date) { return "Yesterday" }
+
+        let daysAgo = calendar.dateComponents([.day], from: startOfDay, to: calendar.startOfDay(for: .now)).day ?? 0
+        let sameYear = calendar.component(.year, from: date) == calendar.component(.year, from: .now)
+
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
+        switch (daysAgo < 7, sameYear) {
+        case (true, true):   formatter.dateFormat = "EEEE, d MMMM"
+        case (true, false):  formatter.dateFormat = "EEEE, d MMMM yyyy"  // edge case: within a week but crossed a year boundary
+        case (false, true):  formatter.dateFormat = "d MMMM"
+        case (false, false): formatter.dateFormat = "d MMMM yyyy"
+        }
         return formatter.string(from: date)
     }
 }

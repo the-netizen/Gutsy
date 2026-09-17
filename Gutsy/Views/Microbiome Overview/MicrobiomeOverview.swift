@@ -1,10 +1,9 @@
 import SwiftUI
-
 struct MicrobiomeOverview: View {
     @ObservedObject var statsVM: WeeklyStatsVM
+    @Binding var showInfo: Bool
 
     @State private var expandedGroup: SuperSixGroups? = nil
-    @State private var showInfo = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -29,7 +28,6 @@ struct MicrobiomeOverview: View {
         }
         .background(.component)
         .clipShape(RoundedRectangle(cornerRadius: 20))
-        // Info popup
         .overlay(alignment: .top) {
             if showInfo {
                 infoPopup
@@ -72,10 +70,15 @@ struct MicrobiomeOverview: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.15), radius: 10, y: 4)
         .padding(.horizontal, 40)
-        .onTapGesture { withAnimation { showInfo = false } }
     }
 }
 
-#Preview{
-    MicrobiomeOverview(statsVM: WeeklyStatsVM())
+#Preview {
+    struct PreviewWrapper: View {
+        @State private var showInfo = false
+        var body: some View {
+            MicrobiomeOverview(statsVM: WeeklyStatsVM(), showInfo: $showInfo)
+        }
+    }
+    return PreviewWrapper()
 }
