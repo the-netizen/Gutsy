@@ -86,4 +86,25 @@ class MealLog: Identifiable{
         }
         return formatter.string(from: date)
     }
+    
+}
+// an array of Meallogs. checks if meals logged on consecutive, then +1 streak. resets streak after 1 day of no input.
+extension Array where Element == MealLog {
+    var currentStreak: Int {
+        guard !isEmpty else { return 0 }
+        let calendar = Calendar.current
+        let loggedDays = Set(map { calendar.startOfDay(for: $0.date) })
+
+        var streak = 0
+        var cursor = calendar.startOfDay(for: .now)
+        if !loggedDays.contains(cursor) {
+            cursor = calendar.date(byAdding: .day, value: -1, to: cursor) ?? cursor
+        }
+        while loggedDays.contains(cursor) {
+            streak += 1
+            guard let previous = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
+            cursor = previous
+        }
+        return streak
+    }
 }

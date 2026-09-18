@@ -97,4 +97,9 @@ class WeeklyStatsVM: ObservableObject {
     func progress(for group: SuperSixGroups) -> Double {
         min(Double(count(for: group)) / Double(perGroupTarget), 1.0)
     }
+    
+    ////Streak
+    var currentStreak: Int{
+        allMealLogs.currentStreak
+    }
 }
